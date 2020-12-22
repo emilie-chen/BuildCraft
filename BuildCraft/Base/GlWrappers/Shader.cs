@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -19,7 +20,7 @@ namespace BuildCraft.Base.GlWrappers
 
         private uint m_RendererID;
         private string m_Name;
-        
+
         public Shader(string name, string vertexSrc, string fragmentSrc)
         {
             m_Name = name;
@@ -37,7 +38,7 @@ namespace BuildCraft.Base.GlWrappers
             {
                 Console.WriteLine($"Error compiling vertex shader {infoLog}");
             }
-            
+
             uint fragmentShader = Gl.CreateShader(ShaderType.FragmentShader);
             Gl.ShaderSource(fragmentShader, fragmentSrc);
             Gl.CompileShader(fragmentShader);
@@ -65,7 +66,7 @@ namespace BuildCraft.Base.GlWrappers
             Gl.DeleteShader(vertexShader);
             Gl.DeleteShader(fragmentShader);
         }
-        
+
         public void Bind()
         {
             Gl.UseProgram(m_RendererID);
@@ -76,22 +77,70 @@ namespace BuildCraft.Base.GlWrappers
             Gl.UseProgram(0);
         }
 
-        // void UploadUniformMat4(string name, const glm::mat4& matrix);
-        // void UploadUniformMat3(string name, const glm::mat3& matrix);
-        // void UploadUniformFloat4(string name, const glm::vec4& values);
-        // void UploadUniformFloat3(string name, const glm::vec3& values);
-        // void UploadUniformFloat2(string name, const glm::vec2& values);
-        // void UploadUniformFloat(string name, float value);
-        // void UploadUniformInt(string name, int value);
-        // void UploadUniformIntArray(string name, int* values, unsigned count);
+        public unsafe void UploadUniformMat4(string name, Mat4 matrix)
+        {
+            Bind();
+            int location = Gl.GetUniformLocation(m_RendererID, name);
+            Debug.Assert(location != -1, "Uniform not found");
+            Gl.UniformMatrix4(location, 1, true, (float*) &matrix);
+        }
 
-        // void SetMat4(string name, const glm::mat4& values) override;
-        // void SetFloat4(string name, const glm::vec4& values) override;
-        // void SetFloat3(string name, const glm::vec3& values) override;
-        // void SetInt(string name, int value) override;
-        // void SetIntArray(string name, int* values, unsigned count) override;
-        // void SetFloat(string name, float value) override;
-        
+        public unsafe void UploadUniformMat3(string name, Mat3 matrix)
+        {
+            Bind();
+            int location = Gl.GetUniformLocation(m_RendererID, name);
+            Debug.Assert(location != -1, "Uniform not found");
+            Gl.UniformMatrix3(location, 1, true, (float*) &matrix);
+        }
+
+        public void UploadUniformFloat4(string name, Vec4 values)
+        {
+            Bind();
+            int location = Gl.GetUniformLocation(m_RendererID, name);
+            Debug.Assert(location != -1, "Uniform not found");
+            Gl.Uniform4(location, values.X, values.Y, values.Z, values.W);
+        }
+
+        public void UploadUniformFloat3(string name, Vec3 values)
+        {            
+            Bind();
+            int location = Gl.GetUniformLocation(m_RendererID, name);
+            Debug.Assert(location != -1, "Uniform not found");
+            Gl.Uniform3(location, values.X, values.Y, values.Z);
+        }
+
+        public void UploadUniformFloat2(string name, Vec2 values)
+        {
+            Bind();
+            int location = Gl.GetUniformLocation(m_RendererID, name);
+            Debug.Assert(location != -1, "Uniform not found");
+            Gl.Uniform2(location, values.X, values.Y);
+        }
+
+        public void UploadUniformFloat(string name, float value)
+        {
+            Bind();
+            int location = Gl.GetUniformLocation(m_RendererID, name);
+            Debug.Assert(location != -1, "Uniform not found");
+            Gl.Uniform1(location, value);
+        }
+
+        public void UploadUniformInt(string name, int value)
+        {
+            Bind();
+            int location = Gl.GetUniformLocation(m_RendererID, name);
+            Debug.Assert(location != -1, "Uniform not found");
+            Gl.Uniform1(location, value);
+        }
+
+        public unsafe void UploadUniformIntArray(string name, int* values, uint count)
+        {
+            Bind();
+            int location = Gl.GetUniformLocation(m_RendererID, name);
+            Debug.Assert(location != -1, "Uniform not found");
+            Gl.Uniform1(location, count, values);
+        }
+
         private void ReleaseUnmanagedResources()
         {
             Gl.DeleteProgram(m_RendererID);

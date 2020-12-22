@@ -10,6 +10,12 @@ using static BuildCraft.Base.OpenGLContext;
 
 namespace BuildCraft.Game
 {
+    using Mat4 = Matrix4X4<float>;
+    using Mat3 = Matrix3X3<float>;
+    using Vec4 = Vector4D<float>;
+    using Vec3 = Vector3D<float>;
+    using Vec2 = Vector2D<float>;
+
     public unsafe class Application
     {
         // private static uint Shader;
@@ -29,9 +35,12 @@ namespace BuildCraft.Game
         private static readonly string FragmentShaderSource = @"
         #version 330 core
         out vec4 FragColor;
+        
+        uniform vec4 u_Color;
+
         void main()
         {
-            FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+            FragColor = u_Color;
         }
         ";
 
@@ -43,7 +52,7 @@ namespace BuildCraft.Game
 
         private static void Main(string[] args)
         {
-            var options = WindowOptions.Default;
+            WindowOptions options = WindowOptions.Default;
             options.Size = new Vector2D<int>(800, 600);
             options.Title = "LearnOpenGL with Silk.NET";
             Init(options, OnLoad, OnUpdate, OnRender, OnClose);
@@ -57,7 +66,7 @@ namespace BuildCraft.Game
             {
                 t.KeyDown += KeyDown;
             }
-            
+
             Gl.Enable(GLEnum.Blend);
 
             vao = new VertexArray();
@@ -94,6 +103,9 @@ namespace BuildCraft.Game
             ibo.Unbind();
 
             shader = new Shader("MainShader", VertexShaderSource, FragmentShaderSource);
+            
+            shader.UploadUniformFloat4("u_Color", new(1.0f, 0.0f, 0.0f, 1.0f));
+            
             shader.Unbind();
         }
 
@@ -105,7 +117,6 @@ namespace BuildCraft.Game
             //Bind the geometry and shader.
             vao.Bind();
             shader.Bind();
-
             //Draw the geometry.
             Gl.DrawElements(PrimitiveType.Triangles, 6U, DrawElementsType.UnsignedInt, null);
         }
