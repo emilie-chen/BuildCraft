@@ -12,7 +12,7 @@ namespace BuildCraft.Game
 {
     public unsafe class Application
     {
-        private static uint Shader;
+        // private static uint Shader;
 
         //Vertex shaders are run on each vertex.
         private static readonly string VertexShaderSource = @"
@@ -38,6 +38,7 @@ namespace BuildCraft.Game
         private static VertexArray vao;
         private static VertexBuffer vbo;
         private static IndexBuffer ibo;
+        private static Shader shader;
 
 
         private static void Main(string[] args)
@@ -92,48 +93,8 @@ namespace BuildCraft.Game
             vbo.Unbind();
             ibo.Unbind();
 
-            //Creating a vertex shader.
-            uint vertexShader = Gl.CreateShader(ShaderType.VertexShader);
-            Gl.ShaderSource(vertexShader, VertexShaderSource);
-            Gl.CompileShader(vertexShader);
-
-            //Checking the shader for compilation errors.
-            string infoLog = Gl.GetShaderInfoLog(vertexShader);
-            if (!string.IsNullOrWhiteSpace(infoLog))
-            {
-                Console.WriteLine($"Error compiling vertex shader {infoLog}");
-            }
-
-            //Creating a fragment shader.
-            uint fragmentShader = Gl.CreateShader(ShaderType.FragmentShader);
-            Gl.ShaderSource(fragmentShader, FragmentShaderSource);
-            Gl.CompileShader(fragmentShader);
-
-            //Checking the shader for compilation errors.
-            infoLog = Gl.GetShaderInfoLog(fragmentShader);
-            if (!string.IsNullOrWhiteSpace(infoLog))
-            {
-                Console.WriteLine($"Error compiling fragment shader {infoLog}");
-            }
-
-            //Combining the shaders under one shader program.
-            Shader = Gl.CreateProgram();
-            Gl.AttachShader(Shader, vertexShader);
-            Gl.AttachShader(Shader, fragmentShader);
-            Gl.LinkProgram(Shader);
-
-            //Checking the linking for errors.
-            Gl.GetProgram(Shader, GLEnum.LinkStatus, out var status);
-            if (status == 0)
-            {
-                Console.WriteLine($"Error linking shader {Gl.GetProgramInfoLog(Shader)}");
-            }
-
-            //Delete the no longer useful individual shaders;
-            Gl.DetachShader(Shader, vertexShader);
-            Gl.DetachShader(Shader, fragmentShader);
-            Gl.DeleteShader(vertexShader);
-            Gl.DeleteShader(fragmentShader);
+            shader = new Shader("MainShader", VertexShaderSource, FragmentShaderSource);
+            shader.Unbind();
         }
 
         private static unsafe void OnRender(double obj) //Method needs to be unsafe due to draw elements.
@@ -143,7 +104,7 @@ namespace BuildCraft.Game
 
             //Bind the geometry and shader.
             vao.Bind();
-            Gl.UseProgram(Shader);
+            shader.Bind();
 
             //Draw the geometry.
             Gl.DrawElements(PrimitiveType.Triangles, 6U, DrawElementsType.UnsignedInt, null);
@@ -157,7 +118,7 @@ namespace BuildCraft.Game
         {
             //Remember to delete the buffers.
             vao.Dispose();
-            Gl.DeleteProgram(Shader);
+            shader.Dispose();
         }
 
         private static void KeyDown(IKeyboard arg1, Key arg2, int arg3)
