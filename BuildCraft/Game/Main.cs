@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using BuildCraft.Base;
 using BuildCraft.Base.GlWrappers;
 using BuildCraft.Base.Std;
@@ -10,11 +11,10 @@ using static BuildCraft.Base.OpenGLContext;
 
 namespace BuildCraft.Game
 {
-    using Mat4 = Matrix4X4<float>;
-    using Mat3 = Matrix3X3<float>;
-    using Vec4 = Vector4D<float>;
-    using Vec3 = Vector3D<float>;
-    using Vec2 = Vector2D<float>;
+    using Mat4 = Matrix4x4;
+    using Vec4 = Vector4;
+    using Vec3 = Vector3;
+    using Vec2 = Vector2;
 
     public unsafe class Application
     {
@@ -23,25 +23,34 @@ namespace BuildCraft.Game
         //Vertex shaders are run on each vertex.
         private static readonly string VertexShaderSource = @"
         #version 330 core //Using version GLSL version 3.3
-        layout (location = 0) in vec4 vPos;
-        
-        void main()
-        {
-            gl_Position = vec4(vPos.x, vPos.y, vPos.z, 1.0);
-        }
+uniform mat4 u_Model;
+uniform mat4 u_View;
+uniform mat4 u_Projection;
+layout (location = 0) in vec3 a_Pos;
+out vec4 v_Pos;
+out vec2 v_TexCoord;
+void main() {
+    gl_Position = u_Projection * u_View * u_Model * vec4(a_Pos, 1.0f);
+    v_Pos = vec4(clamp(a_Pos.xyz, 0.0f, 1.0f), 1.0f);
+    //v_TexCoord = a_TexCoord;
+}
         ";
 
         //Fragment shaders are run on each fragment/pixel of the geometry.
         private static readonly string FragmentShaderSource = @"
         #version 330 core
-        out vec4 FragColor;
-        
-        uniform vec4 u_Color;
 
-        void main()
-        {
-            FragColor = u_Color;
-        }
+uniform sampler2D u_Texture;
+uniform vec4 u_Color;
+
+in vec4 v_Pos;
+in vec2 v_TexCoord;
+out vec4 color;
+
+void main() {
+    //color = texture(u_Texture, v_TexCoord);
+    color = vec4(v_Pos.xyz, 1.0f) + u_Color * 0.001f + vec4(0.2f, 0.2f, 0.2f, 1.0f);
+}
         ";
 
         private static VertexArray vao;
@@ -67,7 +76,8 @@ namespace BuildCraft.Game
                 t.KeyDown += KeyDown;
             }
 
-            Gl.Enable(GLEnum.Blend);
+            Gl.Enable(EnableCap.DepthTest);
+            
 
             vao = new VertexArray();
             vao.Bind();
@@ -75,25 +85,40 @@ namespace BuildCraft.Game
             float* vertices = stackalloc float[]
             {
                 //X    Y      Z
-                0.5f, 0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                -0.5f, 0.5f, 0.5f
+                -0.5f, -0.5f, -0.5f,// bottom left away from me 0
+                -0.5f, -0.5f, 0.5f,   // bottom left towards me    1
+                0.5f, -0.5f, -0.5f,   // bottom right away from me 2
+                0.5f, -0.5f, 0.5f, // bottom right towards me    3
+                -0.5f, 0.5f, -0.5f, // top left away from me     4
+                -0.5f, 0.5f, 0.5f,   // top left towards me        5
+                0.5f, 0.5f, -0.5f, // top right away from me     6
+                0.5f, 0.5f, 0.5f// top right towards me         7
             };
-            vbo = new VertexBuffer(vertices, (3) * 4 * sizeof(float));
+            vbo = new VertexBuffer(vertices, (3) * 8 * sizeof(float));
 
 
             vbo.Layout = new BufferLayout(new BufferElement[]
             {
-                new(ShaderDataType.Float3, "vPos")
+                new(ShaderDataType.Float3, "a_Pos")
             });
 
             uint* indicies = stackalloc uint[]
             {
-                0, 1, 3,
-                1, 2, 3
+                1, 0, 3,
+                3, 0, 2,
+                3, 5, 1,
+                3, 7, 5,
+                7, 6, 4,
+                7, 4, 5,
+                2, 4, 6,
+                2, 0, 4,
+                2, 6, 7,
+                3, 2, 7,
+                5, 4, 0,
+                0, 1, 5
             };
-            ibo = new IndexBuffer(indicies, 6 * sizeof(uint));
+            ibo = new IndexBuffer(indicies, 12 * 3 * sizeof(uint));
+            // ibo = new IndexBuffer(indicies, 2 * 3 * sizeof(uint));
 
 
             vao.AddVertexBuffer(vbo);
@@ -103,26 +128,39 @@ namespace BuildCraft.Game
             ibo.Unbind();
 
             shader = new Shader("MainShader", VertexShaderSource, FragmentShaderSource);
-            
+            // Mat4 projectionMatrix = Matrix4X4.CreatePerspectiveFieldOfView(MathF.PI / 4.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+            // shader.UploadUniformMat4("u_ViewProjection", new (
+            //     1.0f, 0.0f, 0.0f, 0.0f,
+            //     0.0f, 2.0f, 0.0f, 0.0f,
+            //     0.0f, 0.0f, 1.0f, 0.0f,
+            //     0.0f, 0.0f, 0.0f, 1.0f
+            // ));
             shader.UploadUniformFloat4("u_Color", new(1.0f, 0.0f, 0.0f, 1.0f));
-            
+
             shader.Unbind();
         }
 
         private static unsafe void OnRender(double obj) //Method needs to be unsafe due to draw elements.
         {
             //Clear the color channel.
-            Gl.Clear((uint) ClearBufferMask.ColorBufferBit);
+            Gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+
 
             //Bind the geometry and shader.
             vao.Bind();
             shader.Bind();
             //Draw the geometry.
-            Gl.DrawElements(PrimitiveType.Triangles, 6U, DrawElementsType.UnsignedInt, null);
+            Gl.DrawElements(PrimitiveType.Triangles, 12 * 3, DrawElementsType.UnsignedInt, null);
         }
 
-        private static void OnUpdate(double obj)
+        private static void OnUpdate(double ts)
         {
+            MainCamera.Update((float) ts);
+            Mat4 viewMatrix = MainCamera.CalculateViewMatrix();
+            Mat4 projectionMatrix = Mat4.CreatePerspectiveFieldOfView(MathF.PI / 4.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+            shader.UploadUniformMat4("u_View", viewMatrix);
+            shader.UploadUniformMat4("u_Model", Mat4.Identity);
+            shader.UploadUniformMat4("u_Projection", projectionMatrix);
         }
 
         private static void OnClose()

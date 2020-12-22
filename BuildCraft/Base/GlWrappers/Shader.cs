@@ -8,11 +8,10 @@ using static BuildCraft.Base.OpenGLContext;
 
 namespace BuildCraft.Base.GlWrappers
 {
-    using Mat4 = Matrix4X4<float>;
-    using Mat3 = Matrix3X3<float>;
-    using Vec4 = Vector4D<float>;
-    using Vec3 = Vector3D<float>;
-    using Vec2 = Vector2D<float>;
+    using Mat4 = Matrix4x4;
+    using Vec4 = Vector4;
+    using Vec3 = Vector3;
+    using Vec2 = Vector2;
 
     public class Shader : IBindable, IDisposable
     {
@@ -82,15 +81,7 @@ namespace BuildCraft.Base.GlWrappers
             Bind();
             int location = Gl.GetUniformLocation(m_RendererID, name);
             Debug.Assert(location != -1, "Uniform not found");
-            Gl.UniformMatrix4(location, 1, true, (float*) &matrix);
-        }
-
-        public unsafe void UploadUniformMat3(string name, Mat3 matrix)
-        {
-            Bind();
-            int location = Gl.GetUniformLocation(m_RendererID, name);
-            Debug.Assert(location != -1, "Uniform not found");
-            Gl.UniformMatrix3(location, 1, true, (float*) &matrix);
+            Gl.UniformMatrix4(location, 1, false, (float*) &matrix);
         }
 
         public void UploadUniformFloat4(string name, Vec4 values)

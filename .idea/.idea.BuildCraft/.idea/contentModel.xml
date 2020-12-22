@@ -6,6 +6,7 @@
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="BuildCraft" t="IncludeRecursive">
         <e p="Base" t="Include">
+          <e p="Camera.cs" t="Include" />
           <e p="GlWrappers" t="Include">
             <e p="Buffer.cs" t="Include" />
             <e p="GlBinding.cs" t="Include" />
