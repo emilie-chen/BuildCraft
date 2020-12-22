@@ -9,6 +9,7 @@
           <e p="GlWrappers" t="Include">
             <e p="Buffer.cs" t="Include" />
             <e p="GlBinding.cs" t="Include" />
+            <e p="Shader.cs" t="Include" />
             <e p="VertexArray.cs" t="Include" />
           </e>
           <e p="OpenGL.cs" t="Include" />

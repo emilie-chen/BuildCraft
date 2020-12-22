@@ -82,10 +82,20 @@ namespace BuildCraft.Game
                 vbo = new VertexBuffer(v, Vertices.Length * sizeof(float));
             }
 
+            vbo.Layout = new BufferLayout(new BufferElement[]
+            {
+                new (ShaderDataType.Float3, "vPos")
+            });
+
             fixed (uint* i = &Indices[0])
             {
                 ibo = new IndexBuffer(i, Indices.Length * sizeof(uint));
             }
+            vao.AddVertexBuffer(vbo);
+            vao.SetIndexBuffer(ibo);
+            vao.Unbind();
+            vbo.Unbind();
+            ibo.Unbind();
 
             //Creating a vertex shader.
             uint vertexShader = Gl.CreateShader(ShaderType.VertexShader);
@@ -129,10 +139,6 @@ namespace BuildCraft.Game
             Gl.DetachShader(Shader, fragmentShader);
             Gl.DeleteShader(vertexShader);
             Gl.DeleteShader(fragmentShader);
-
-            //Tell opengl how to give the data to the shaders.
-            Gl.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), null);
-            Gl.EnableVertexAttribArray(0);
         }
 
         private static unsafe void OnRender(double obj) //Method needs to be unsafe due to draw elements.
