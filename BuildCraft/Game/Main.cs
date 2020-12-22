@@ -35,23 +35,6 @@ namespace BuildCraft.Game
         }
         ";
 
-        //Vertex data, uploaded to the VBO.
-        private static readonly float[] Vertices =
-        {
-            //X    Y      Z
-            0.5f, 0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            -0.5f, 0.5f, 0.5f
-        };
-
-        //Index data, uploaded to the EBO.
-        private static readonly uint[] Indices =
-        {
-            0, 1, 3,
-            1, 2, 3
-        };
-
         private static VertexArray vao;
         private static VertexBuffer vbo;
         private static IndexBuffer ibo;
@@ -69,28 +52,40 @@ namespace BuildCraft.Game
         private static void OnLoad()
         {
             IInputContext input = GlWindow.CreateInput();
-            for (int i = 0; i < input.Keyboards.Count; i++)
+            foreach (IKeyboard t in input.Keyboards)
             {
-                input.Keyboards[i].KeyDown += KeyDown;
+                t.KeyDown += KeyDown;
             }
             
+            Gl.Enable(GLEnum.Blend);
+
             vao = new VertexArray();
             vao.Bind();
-            
-            fixed (float* v = Vertices)
+
+            float* vertices = stackalloc float[]
             {
-                vbo = new VertexBuffer(v, Vertices.Length * sizeof(float));
-            }
+                //X    Y      Z
+                0.5f, 0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f,
+                -0.5f, -0.5f, 0.0f,
+                -0.5f, 0.5f, 0.5f
+            };
+            vbo = new VertexBuffer(vertices, (3) * 4 * sizeof(float));
+
 
             vbo.Layout = new BufferLayout(new BufferElement[]
             {
-                new (ShaderDataType.Float3, "vPos")
+                new(ShaderDataType.Float3, "vPos")
             });
 
-            fixed (uint* i = &Indices[0])
+            uint* indicies = stackalloc uint[]
             {
-                ibo = new IndexBuffer(i, Indices.Length * sizeof(uint));
-            }
+                0, 1, 3,
+                1, 2, 3
+            };
+            ibo = new IndexBuffer(indicies, 6 * sizeof(uint));
+
+
             vao.AddVertexBuffer(vbo);
             vao.SetIndexBuffer(ibo);
             vao.Unbind();
@@ -151,7 +146,7 @@ namespace BuildCraft.Game
             Gl.UseProgram(Shader);
 
             //Draw the geometry.
-            Gl.DrawElements(PrimitiveType.Triangles, (uint) Indices.Length, DrawElementsType.UnsignedInt, null);
+            Gl.DrawElements(PrimitiveType.Triangles, 6U, DrawElementsType.UnsignedInt, null);
         }
 
         private static void OnUpdate(double obj)

@@ -87,7 +87,6 @@ namespace BuildCraft.Base.GlWrappers
 
             Bind();
             vertexBuffer.Bind();
-
             uint index = 0;
             BufferLayout layout = vertexBuffer.Layout;
             foreach (BufferElement element in layout)

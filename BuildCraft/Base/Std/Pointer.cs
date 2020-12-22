@@ -88,6 +88,7 @@ namespace BuildCraft.Base.Std
         }
     }
 
+    // USE WITH CARE
     [StructLayout(LayoutKind.Sequential, Size = 8)]
     public unsafe struct VoidPointer
     {
@@ -110,63 +111,6 @@ namespace BuildCraft.Base.Std
         public static implicit operator VoidPointer(void* ptr)
         {
             return new(ptr);
-        }
-    }
-
-
-    [StructLayout(LayoutKind.Sequential, Size = 8)]
-    public unsafe struct Pointer<T> where T : unmanaged
-    {
-        public T* Value;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public Pointer(T* ptr)
-        {
-            Value = ptr;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public static implicit operator T*(Pointer<T> boxedPtr)
-        {
-            return boxedPtr.Value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public static implicit operator Pointer<T>(T* ptr)
-        {
-            return new(ptr);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public static implicit operator void*(Pointer<T> boxedPtr)
-        {
-            return boxedPtr.Value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public static Pointer<T> operator ++(Pointer<T> boxedPtr)
-        {
-            boxedPtr.Value++;
-            return boxedPtr;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public static Pointer<T> operator --(Pointer<T> boxedPtr)
-        {
-            boxedPtr.Value--;
-            return boxedPtr;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public static implicit operator VoidPointer(Pointer<T> boxedPtr)
-        {
-            return new(boxedPtr.Value);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public static explicit operator Pointer<T>(VoidPointer ptr)
-        {
-            return new((T*) ptr);
         }
     }
 }
