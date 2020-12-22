@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices;
+using System.Security;
 using BuildCraft.Base;
 using BuildCraft.Base.GlWrappers;
 using BuildCraft.Base.Std;
@@ -8,6 +12,7 @@ using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using static BuildCraft.Base.OpenGLContext;
+using static BuildCraft.Base.Std.Native;
 
 namespace BuildCraft.Game
 {
@@ -16,10 +21,9 @@ namespace BuildCraft.Game
     using Vec3 = Vector3;
     using Vec2 = Vector2;
 
+
     public unsafe class Application
     {
-        // private static uint Shader;
-
         //Vertex shaders are run on each vertex.
         private static readonly string VertexShaderSource = @"
         #version 330 core //Using version GLSL version 3.3
@@ -61,6 +65,7 @@ void main() {
 
         private static void Main(string[] args)
         {
+           
             WindowOptions options = WindowOptions.Default;
             options.Size = new Vector2D<int>(800, 600);
             options.Title = "LearnOpenGL with Silk.NET";
@@ -77,7 +82,7 @@ void main() {
             }
 
             Gl.Enable(EnableCap.DepthTest);
-            
+
 
             vao = new VertexArray();
             vao.Bind();
@@ -85,14 +90,14 @@ void main() {
             float* vertices = stackalloc float[]
             {
                 //X    Y      Z
-                -0.5f, -0.5f, -0.5f,// bottom left away from me 0
-                -0.5f, -0.5f, 0.5f,   // bottom left towards me    1
-                0.5f, -0.5f, -0.5f,   // bottom right away from me 2
+                -0.5f, -0.5f, -0.5f, // bottom left away from me 0
+                -0.5f, -0.5f, 0.5f, // bottom left towards me    1
+                0.5f, -0.5f, -0.5f, // bottom right away from me 2
                 0.5f, -0.5f, 0.5f, // bottom right towards me    3
                 -0.5f, 0.5f, -0.5f, // top left away from me     4
-                -0.5f, 0.5f, 0.5f,   // top left towards me        5
+                -0.5f, 0.5f, 0.5f, // top left towards me        5
                 0.5f, 0.5f, -0.5f, // top right away from me     6
-                0.5f, 0.5f, 0.5f// top right towards me         7
+                0.5f, 0.5f, 0.5f // top right towards me         7
             };
             vbo = new VertexBuffer(vertices, (3) * 8 * sizeof(float));
 
@@ -157,7 +162,12 @@ void main() {
         {
             MainCamera.Update((float) ts);
             Mat4 viewMatrix = MainCamera.CalculateViewMatrix();
-            Mat4 projectionMatrix = Mat4.CreatePerspectiveFieldOfView(MathF.PI / 4.0f, 8.0f / 6.0f, 0.1f, 100.0f);
+            Mat4 projectionMatrix = Mat4.CreatePerspectiveFieldOfView(
+                MathF.PI / 4.0f,
+                (float) GlWindow.Size.X / GlWindow.Size.Y,
+                0.1f,
+                100.0f
+            );
             shader.UploadUniformMat4("u_View", viewMatrix);
             shader.UploadUniformMat4("u_Model", Mat4.Identity);
             shader.UploadUniformMat4("u_Projection", projectionMatrix);

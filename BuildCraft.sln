@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildCraft", "BuildCraft\BuildCraft.csproj", "{1587C123-F681-4294-A409-ADCD731D5642}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildCraftBaseUnitTest", "BuildCraftBaseUnitTest\BuildCraftBaseUnitTest.csproj", "{BBCB5CE9-A43D-4FFF-B88B-476BBB75AAE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{1587C123-F681-4294-A409-ADCD731D5642}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1587C123-F681-4294-A409-ADCD731D5642}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1587C123-F681-4294-A409-ADCD731D5642}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBCB5CE9-A43D-4FFF-B88B-476BBB75AAE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBCB5CE9-A43D-4FFF-B88B-476BBB75AAE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBCB5CE9-A43D-4FFF-B88B-476BBB75AAE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBCB5CE9-A43D-4FFF-B88B-476BBB75AAE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
