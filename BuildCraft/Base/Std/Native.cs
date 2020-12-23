@@ -19,5 +19,8 @@ namespace BuildCraft.Base.Std
         
         [DllImport("libSystem.dylib", EntryPoint = "memset"), SuppressUnmanagedCodeSecurity]
         public static extern void memset(void* ptr, int value, size_t num);
+        
+        [DllImport("libSystem.dylib", EntryPoint = "memcpy"), SuppressUnmanagedCodeSecurity]
+        public static extern void memcpy(void* dest, void* src, size_t size);
     }
 }
