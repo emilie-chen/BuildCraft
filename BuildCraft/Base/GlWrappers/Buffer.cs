@@ -204,6 +204,11 @@ namespace BuildCraft.Base.GlWrappers
 
         public uint Count => m_Count;
 
+        /// <summary>
+        /// Creating an index buffer with the data and count
+        /// </summary>
+        /// <param name="indices">data</param>
+        /// <param name="count">NUMBER OF ELEMENTS, NOT SIZE</param>
         public unsafe IndexBuffer(uint* indices, size_t count)
         {
             m_RendererID = Gl.GenBuffer();

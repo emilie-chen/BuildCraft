@@ -103,7 +103,7 @@ namespace BuildCraft.Game.Renderer
                 }
             }
 
-            m_IndexBuffer = new IndexBuffer(indices, 36 * sizeof(uint));
+            m_IndexBuffer = new IndexBuffer(indices, 36);
             
             m_VertexArray.AddVertexBuffer(m_VertexBuffer);
             m_VertexArray.SetIndexBuffer(m_IndexBuffer);

@@ -6,6 +6,9 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+      <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="Silk.NET" Version="2.0.0-preview4" />
       <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
