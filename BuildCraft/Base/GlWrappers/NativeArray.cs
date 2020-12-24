@@ -10,7 +10,7 @@ namespace BuildCraft.Base.GlWrappers
         private readonly size_t m_Count;
         private T* m_Data;
 
-        public size_t Size => m_Count;
+        public size_t Length => m_Count;
         public T* Data => m_Data;
         
         public T this[int index]

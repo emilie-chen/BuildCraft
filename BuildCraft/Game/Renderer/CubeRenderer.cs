@@ -39,46 +39,52 @@ namespace BuildCraft.Game.Renderer
             {
                 // X    Y      Z     U   V
                 // back
-                -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-                0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-                0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-                -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+                -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 15.0f,
+                0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
+                0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
+                -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
+ 
+                // front 
+                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
+                0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
+                0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
+                -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
 
-                // front
-                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-                0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-                0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-                -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+                // left 
+                -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
+                -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
+                -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
+                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
 
-                // left
-                -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-                -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-                -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-                // right
-                0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-                0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-                0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-                0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-                // bottom
-                -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-                0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-                0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+                // right 
+                0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
+                0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
+                0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
+                0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
+ 
+                // bottom 
+                -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
+                0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
+                0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
+                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
 
                 // top
-                -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-                0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-                0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-                -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+                -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
+                0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
+                0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
+                -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
             };
-            m_VertexBuffer = new VertexBuffer(vertices, (3 + 2) * 4 * 6 * sizeof(float));
+
+            NativeArray<float> cubeVerticesTemplate = new NativeArray<float>((3 + 2 + 1 + 1) * 4 * 6);
+            memcpy(cubeVerticesTemplate.Data, vertices, cubeVerticesTemplate.Length * sizeof(float));
+
+            m_VertexBuffer = new VertexBuffer(vertices, (3 + 2 + 1 + 1) * 4 * 6 * sizeof(float));
             m_VertexBuffer.Layout = new BufferLayout(new BufferElement[]
             {
                 new(ShaderDataType.Float3, "a_Pos"),
-                new(ShaderDataType.Float2, "a_TexCoord")
+                new(ShaderDataType.Float2, "a_TexCoord"),
+                new(ShaderDataType.Float, "a_TexID"),
+                new(ShaderDataType.Float, "a_LightLevel")
             });
             
             uint* standardDrawingOrder = stackalloc uint[6]

@@ -26,6 +26,7 @@ namespace BuildCraft.Game
     public static unsafe class Application
     {
         private static Texture tex;
+        private static Texture tex2;
 
         private static CubeRenderer renderer;
 
@@ -47,7 +48,8 @@ namespace BuildCraft.Game
                 t.KeyDown += KeyDown;
             }
 
-            tex = new Texture("Assets/Textures/testimg.png");
+            tex = new Texture("Assets/Textures/cobblestone.png");
+            tex2 = new Texture("Assets/Textures/dirt.png");
             renderer = new CubeRenderer();
         }
 
@@ -61,6 +63,17 @@ namespace BuildCraft.Game
                     for (int k = 0; k < 16; k++)
                     {
                         renderer.RenderCube(new(i, j, k), tex);
+                    }
+                }
+            }
+
+            for (int i = 0; i < 16; i++)
+            {
+                for (int j = 16; j < 18; j++)
+                {
+                    for (int k = 0; k < 16; k++)
+                    {
+                        renderer.RenderCube(new (i, j, k), tex2);
                     }
                 }
             }

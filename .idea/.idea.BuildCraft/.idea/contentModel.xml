@@ -19,7 +19,8 @@
             </e>
           </e>
           <e p="Textures" t="Include">
-            <e p="testimg.png" t="Include" />
+            <e p="cobblestone.png" t="Include" />
+            <e p="dirt.png" t="Include" />
           </e>
         </e>
         <e p="Base" t="Include">

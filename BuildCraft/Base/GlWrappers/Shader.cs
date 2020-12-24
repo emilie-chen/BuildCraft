@@ -20,7 +20,7 @@ namespace BuildCraft.Base.GlWrappers
 
         private uint m_RendererID;
         private string m_Name;
-        private IDictionary<string, int> m_UniformLocationCache;
+        private readonly IDictionary<string, int> m_UniformLocationCache;
 
         public Shader(string name, string vertexSrc, string fragmentSrc)
         {
