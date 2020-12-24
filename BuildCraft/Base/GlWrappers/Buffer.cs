@@ -211,6 +211,7 @@ namespace BuildCraft.Base.GlWrappers
         /// <param name="count">NUMBER OF ELEMENTS, NOT SIZE</param>
         public unsafe IndexBuffer(uint* indices, size_t count)
         {
+            m_Count = count;
             m_RendererID = Gl.GenBuffer();
             Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, m_RendererID);
             Gl.BufferData(BufferTargetARB.ElementArrayBuffer, (size_t) (count * sizeof(uint)), indices,
