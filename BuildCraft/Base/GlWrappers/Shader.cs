@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using static BuildCraft.Base.OpenGLContext;
@@ -19,10 +20,12 @@ namespace BuildCraft.Base.GlWrappers
 
         private uint m_RendererID;
         private string m_Name;
+        private IDictionary<string, int> m_UniformLocationCache;
 
         public Shader(string name, string vertexSrc, string fragmentSrc)
         {
             m_Name = name;
+            m_UniformLocationCache = new Dictionary<string, int>();
             CompileShaders(vertexSrc, fragmentSrc);
         }
 
@@ -76,59 +79,136 @@ namespace BuildCraft.Base.GlWrappers
             Gl.UseProgram(0);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public unsafe void UploadUniformMat4(string name, Mat4 matrix)
         {
             Bind();
-            int location = Gl.GetUniformLocation(m_RendererID, name);
-            Debug.Assert(location != -1, "Uniform not found");
+            int location;
+            // cache location
+            if (m_UniformLocationCache.ContainsKey(name))
+            {
+                location = m_UniformLocationCache[name];
+            }
+            else
+            {
+                location = Gl.GetUniformLocation(m_RendererID, name);
+                Debug.Assert(location != -1, "Uniform not found");
+                m_UniformLocationCache[name] = location;
+            }
             Gl.UniformMatrix4(location, 1, false, (float*) &matrix);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void UploadUniformFloat4(string name, Vec4 values)
         {
             Bind();
-            int location = Gl.GetUniformLocation(m_RendererID, name);
-            Debug.Assert(location != -1, "Uniform not found");
+            int location;
+            // cache location
+            if (m_UniformLocationCache.ContainsKey(name))
+            {
+                location = m_UniformLocationCache[name];
+            }
+            else
+            {
+                location = Gl.GetUniformLocation(m_RendererID, name);
+                Debug.Assert(location != -1, "Uniform not found");
+                m_UniformLocationCache[name] = location;
+            }
             Gl.Uniform4(location, values.X, values.Y, values.Z, values.W);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void UploadUniformFloat3(string name, Vec3 values)
         {            
             Bind();
-            int location = Gl.GetUniformLocation(m_RendererID, name);
-            Debug.Assert(location != -1, "Uniform not found");
+            int location;
+            // cache location
+            if (m_UniformLocationCache.ContainsKey(name))
+            {
+                location = m_UniformLocationCache[name];
+            }
+            else
+            {
+                location = Gl.GetUniformLocation(m_RendererID, name);
+                Debug.Assert(location != -1, "Uniform not found");
+                m_UniformLocationCache[name] = location;
+            }
             Gl.Uniform3(location, values.X, values.Y, values.Z);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void UploadUniformFloat2(string name, Vec2 values)
         {
             Bind();
-            int location = Gl.GetUniformLocation(m_RendererID, name);
-            Debug.Assert(location != -1, "Uniform not found");
+            int location;
+            // cache location
+            if (m_UniformLocationCache.ContainsKey(name))
+            {
+                location = m_UniformLocationCache[name];
+            }
+            else
+            {
+                location = Gl.GetUniformLocation(m_RendererID, name);
+                Debug.Assert(location != -1, "Uniform not found");
+                m_UniformLocationCache[name] = location;
+            }
             Gl.Uniform2(location, values.X, values.Y);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void UploadUniformFloat(string name, float value)
         {
             Bind();
-            int location = Gl.GetUniformLocation(m_RendererID, name);
-            Debug.Assert(location != -1, "Uniform not found");
+            int location;
+            // cache location
+            if (m_UniformLocationCache.ContainsKey(name))
+            {
+                location = m_UniformLocationCache[name];
+            }
+            else
+            {
+                location = Gl.GetUniformLocation(m_RendererID, name);
+                Debug.Assert(location != -1, "Uniform not found");
+                m_UniformLocationCache[name] = location;
+            }
             Gl.Uniform1(location, value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void UploadUniformInt(string name, int value)
         {
             Bind();
-            int location = Gl.GetUniformLocation(m_RendererID, name);
-            Debug.Assert(location != -1, "Uniform not found");
+            int location;
+            // cache location
+            if (m_UniformLocationCache.ContainsKey(name))
+            {
+                location = m_UniformLocationCache[name];
+            }
+            else
+            {
+                location = Gl.GetUniformLocation(m_RendererID, name);
+                Debug.Assert(location != -1, "Uniform not found");
+                m_UniformLocationCache[name] = location;
+            }
             Gl.Uniform1(location, value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public unsafe void UploadUniformIntArray(string name, int* values, uint count)
         {
             Bind();
-            int location = Gl.GetUniformLocation(m_RendererID, name);
-            Debug.Assert(location != -1, "Uniform not found");
+            int location;
+            // cache location
+            if (m_UniformLocationCache.ContainsKey(name))
+            {
+                location = m_UniformLocationCache[name];
+            }
+            else
+            {
+                location = Gl.GetUniformLocation(m_RendererID, name);
+                Debug.Assert(location != -1, "Uniform not found");
+                m_UniformLocationCache[name] = location;
+            }
             Gl.Uniform1(location, count, values);
         }
 

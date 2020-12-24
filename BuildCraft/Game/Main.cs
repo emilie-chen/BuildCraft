@@ -34,7 +34,7 @@ namespace BuildCraft.Game
         {
             WindowOptions options = WindowOptions.Default;
             options.Size = new Vector2D<int>(800, 600);
-            options.Title = "LearnOpenGL with Silk.NET";
+            options.Title = "BuildCraft";
             Init(options, OnLoad, OnUpdate, OnRender, OnClose);
             RunWindow();
         }
@@ -54,7 +54,16 @@ namespace BuildCraft.Game
         private static unsafe void OnRender(double obj)
         {
             renderer.BeginScene(MainCamera);
-            renderer.RenderCube(new (), tex);
+            for (int i = 0; i < 16; i++)
+            {
+                for (int j = 0; j < 16; j++)
+                {
+                    for (int k = 0; k < 16; k++)
+                    {
+                        renderer.RenderCube(new(i, j, k), tex);
+                    }
+                }
+            }
             renderer.EndScene();
         }
 

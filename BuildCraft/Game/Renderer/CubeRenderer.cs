@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using BuildCraft.Base;
 using BuildCraft.Base.GlWrappers;
 using Silk.NET.OpenGL;
@@ -109,14 +110,11 @@ namespace BuildCraft.Game.Renderer
             m_Shader.Unbind();
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void BeginScene(Camera camera)
         {
             Gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
             m_Camera = camera;
-        }
-
-        public unsafe void RenderCube(Vec3 coordinates, Texture texture)
-        {
             m_VertexArray.Bind();
             m_Shader.Bind();
             Mat4 viewMatrix = m_Camera.CalculateViewMatrix();
@@ -127,8 +125,13 @@ namespace BuildCraft.Game.Renderer
                 100.0f
             );
             m_Shader.UploadUniformMat4("u_View", viewMatrix);
-            m_Shader.UploadUniformMat4("u_Model", Mat4.Identity);
             m_Shader.UploadUniformMat4("u_Projection", projectionMatrix);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public unsafe void RenderCube(Vec3 coordinates, Texture texture)
+        {
+            m_Shader.UploadUniformMat4("u_Model", Mat4.CreateTranslation(coordinates));
             texture.Bind();
             m_Shader.UploadUniformInt("u_Texture", 0);
             Gl.DrawElements(PrimitiveType.Triangles, 36, DrawElementsType.UnsignedInt, null);
