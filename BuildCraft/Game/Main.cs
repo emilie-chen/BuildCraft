@@ -8,6 +8,8 @@ using BuildCraft.Base;
 using BuildCraft.Base.GlWrappers;
 using BuildCraft.Base.Std;
 using BuildCraft.Game.Renderer;
+using BuildCraft.Game.Resource;
+using BuildCraft.Game.World;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -29,6 +31,7 @@ namespace BuildCraft.Game
         private static Texture tex2;
 
         private static CubeRenderer renderer;
+        private static Chunk testChunk;
 
 
         private static void Main(string[] args)
@@ -47,36 +50,48 @@ namespace BuildCraft.Game
             {
                 t.KeyDown += KeyDown;
             }
-
-            tex = new Texture("Assets/Textures/cobblestone.png");
-            tex2 = new Texture("Assets/Textures/dirt.png");
+            TextureManager.Init();
+            tex = new Texture("Assets/Textures/BlockTexture-2-Cobblestone-Front.png");
+            tex2 = new Texture("Assets/Textures/BlockTexture-1-Dirt-Front.png");
             renderer = new CubeRenderer();
+            testChunk = new Chunk(new(0.0f, 0.0f));
+            for (int i = 0; i < 16; i++)
+            {
+                for (int j = 0; j < 1; j++)
+                {
+                    for (int k = 0; k < 16; k++)
+                    {
+                        testChunk[i, j, k].Type = BlockType.Cobblestone;
+                    }
+                }
+            }
         }
 
         private static unsafe void OnRender(double obj)
         {
             renderer.BeginScene(MainCamera);
-            for (int i = 0; i < 16; i++)
-            {
-                for (int j = 0; j < 16; j++)
-                {
-                    for (int k = 0; k < 16; k++)
-                    {
-                        renderer.RenderCube(new(i, j, k), tex);
-                    }
-                }
-            }
-
-            for (int i = 0; i < 16; i++)
-            {
-                for (int j = 16; j < 18; j++)
-                {
-                    for (int k = 0; k < 16; k++)
-                    {
-                        renderer.RenderCube(new (i, j, k), tex2);
-                    }
-                }
-            }
+            // for (int i = 0; i < 16; i++)
+            // {
+            //     for (int j = 0; j < 16; j++)
+            //     {
+            //         for (int k = 0; k < 16; k++)
+            //         {
+            //             renderer.RenderCube(new(i, j, k), tex);
+            //         }
+            //     }
+            // }
+            //
+            // for (int i = 0; i < 16; i++)
+            // {
+            //     for (int j = 16; j < 18; j++)
+            //     {
+            //         for (int k = 0; k < 16; k++)
+            //         {
+            //             renderer.RenderCube(new (i, j, k), tex2);
+            //         }
+            //     }
+            // }
+            renderer.RenderChunk(testChunk);
             renderer.EndScene();
         }
 

@@ -10,9 +10,11 @@ layout (location = 3) in float a_LightLevel;
 
 out vec4 v_Pos;
 out vec2 v_TexCoord;
+out float v_LightLevel;
 
 void main() {
     gl_Position = u_Projection * u_View * u_Model * vec4(a_Pos, 1.0f);
     v_Pos = vec4(clamp(a_Pos.xyz, 0.0f, 1.0f), 1.0f);
     v_TexCoord = a_TexCoord;
+    v_LightLevel = a_LightLevel;
 }

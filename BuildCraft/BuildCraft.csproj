@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <Folder Include="Assets\Textures" />
+      <Folder Include="Game\World\" />
     </ItemGroup>
 
 </Project>

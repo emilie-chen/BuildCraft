@@ -4,6 +4,8 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using BuildCraft.Base;
 using BuildCraft.Base.GlWrappers;
+using BuildCraft.Game.Resource;
+using BuildCraft.Game.World;
 using Silk.NET.OpenGL;
 using static BuildCraft.Base.OpenGLContext;
 using static BuildCraft.Base.Std.Native;
@@ -31,48 +33,50 @@ namespace BuildCraft.Game.Renderer
             Gl.Enable(EnableCap.DepthTest);
             Gl.Enable(EnableCap.Blend);
             Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            Gl.Enable(EnableCap.CullFace);
             
             m_VertexArray = new VertexArray();
             m_VertexArray.Bind();
 
+            // front is positive x axis
             float* vertices = stackalloc float[]
             {
-                // X    Y      Z     U   V
-                // back
-                -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 15.0f,
-                0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
-                0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
-                -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
- 
-                // front 
-                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
-                0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
-                0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
-                -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
+                // X      Y      Z      U    V    TexID Light
+                // back (negative x)
+                -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+                -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f,
+                -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f,
 
-                // left 
-                -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
-                -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
-                -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
-                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
+                // front (positive x)
+                0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+                0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f,
+                0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+                0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f,
+                
+                // left (negative z)
+                0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,   1.0f,
+                0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   1.0f,
+                -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 1.0f,
+                -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,
 
-                // right 
-                0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
-                0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
-                0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
-                0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
- 
-                // bottom 
-                -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
-                0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
-                0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
-                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
+                // right (positive z)
+                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f,
+                0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,
+                0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  1.0f,
+                -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
 
-                // top
-                -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 15.0f,
-                0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 15.0f,
-                0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 15.0f,
-                -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 15.0f,
+                // bottom (negative y)
+                -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+                0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f,
+                0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,
+                -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f,
+
+                // top (positive y)
+                0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,
+                0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f,
+                -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+                -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f,
             };
 
             NativeArray<float> cubeVerticesTemplate = new NativeArray<float>((3 + 2 + 1 + 1) * 4 * 6);
@@ -141,6 +145,27 @@ namespace BuildCraft.Game.Renderer
             texture.Bind();
             m_Shader.UploadUniformInt("u_Texture", 0);
             Gl.DrawElements(PrimitiveType.Triangles, 36, DrawElementsType.UnsignedInt, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public unsafe void RenderChunk(Chunk chunk)
+        {
+            Vec3 chunkBase = chunk.BasePosition;
+            for (int i = 0; i < 16; i++)
+            {
+                for (int j = 0; j < 256; j++)
+                {
+                    for (int k = 0; k < 16; k++)
+                    {
+                        Block block = chunk[i, j, k];
+                        Texture tex = TextureManager.GetTextureFromBlockType(block.Type, BlockFace.Front);
+                        if (tex != null)
+                        {
+                            RenderCube(chunkBase + new Vec3(i, j, k), tex);
+                        }
+                    }
+                }
+            }
         }
 
         public void EndScene()

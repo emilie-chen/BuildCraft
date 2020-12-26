@@ -19,8 +19,18 @@
             </e>
           </e>
           <e p="Textures" t="Include">
-            <e p="cobblestone.png" t="Include" />
-            <e p="dirt.png" t="Include" />
+            <e p="BlockTexture-1-Dirt-Back.png" t="Include" />
+            <e p="BlockTexture-1-Dirt-Bottom.png" t="Include" />
+            <e p="BlockTexture-1-Dirt-Front.png" t="Include" />
+            <e p="BlockTexture-1-Dirt-Left.png" t="Include" />
+            <e p="BlockTexture-1-Dirt-Right.png" t="Include" />
+            <e p="BlockTexture-1-Dirt-Top.png" t="Include" />
+            <e p="BlockTexture-2-Cobblestone-Back.png" t="Include" />
+            <e p="BlockTexture-2-Cobblestone-Bottom.png" t="Include" />
+            <e p="BlockTexture-2-Cobblestone-Front.png" t="Include" />
+            <e p="BlockTexture-2-Cobblestone-Left.png" t="Include" />
+            <e p="BlockTexture-2-Cobblestone-Right.png" t="Include" />
+            <e p="BlockTexture-2-Cobblestone-Top.png" t="Include" />
           </e>
         </e>
         <e p="Base" t="Include">
@@ -45,6 +55,14 @@
           <e p="Main.cs" t="Include" />
           <e p="Renderer" t="Include">
             <e p="CubeRenderer.cs" t="Include" />
+          </e>
+          <e p="Resource" t="Include">
+            <e p="TextureManager.cs" t="Include" />
+          </e>
+          <e p="World" t="Include">
+            <e p="Block.cs" t="Include" />
+            <e p="BlockProperties.cs" t="Include" />
+            <e p="Chunk.cs" t="Include" />
           </e>
         </e>
         <e p="obj" t="ExcludeRecursive">
