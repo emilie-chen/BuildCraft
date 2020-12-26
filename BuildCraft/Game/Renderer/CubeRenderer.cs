@@ -19,8 +19,8 @@ namespace BuildCraft.Game.Renderer
     
     public class CubeRenderer : IDisposable
     {
-        private static readonly string VertexShaderSource = File.ReadAllText("Assets/Shaders/Test/Shader.vert");
-        private static readonly string FragmentShaderSource = File.ReadAllText("Assets/Shaders/Test/Shader.frag");
+        public static readonly string VertexShaderSource = File.ReadAllText("Assets/Shaders/Test/Shader.vert");
+        public static readonly string FragmentShaderSource = File.ReadAllText("Assets/Shaders/Test/Shader.frag");
         
         private VertexArray m_VertexArray;
         private VertexBuffer m_VertexBuffer;
@@ -123,6 +123,7 @@ namespace BuildCraft.Game.Renderer
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void BeginScene(Camera camera)
         {
+            Gl.ClearColor(1.0f, 0.0f, 1.0f, 1.0f);
             Gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
             m_Camera = camera;
             m_VertexArray.Bind();

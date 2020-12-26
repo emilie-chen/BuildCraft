@@ -30,7 +30,7 @@ namespace BuildCraft.Game
         private static Texture tex;
         private static Texture tex2;
 
-        private static CubeRenderer renderer;
+        private static ChunkRenderer renderer;
         private static Chunk testChunk;
 
 
@@ -53,11 +53,11 @@ namespace BuildCraft.Game
             TextureManager.Init();
             tex = new Texture("Assets/Textures/BlockTexture-2-Cobblestone-Front.png");
             tex2 = new Texture("Assets/Textures/BlockTexture-1-Dirt-Front.png");
-            renderer = new CubeRenderer();
+            renderer = new ChunkRenderer();
             testChunk = new Chunk(new(0.0f, 0.0f));
             for (int i = 0; i < 16; i++)
             {
-                for (int j = 0; j < 1; j++)
+                for (int j = 0; j < 16; j++)
                 {
                     for (int k = 0; k < 16; k++)
                     {
@@ -70,28 +70,9 @@ namespace BuildCraft.Game
         private static unsafe void OnRender(double obj)
         {
             renderer.BeginScene(MainCamera);
-            // for (int i = 0; i < 16; i++)
-            // {
-            //     for (int j = 0; j < 16; j++)
-            //     {
-            //         for (int k = 0; k < 16; k++)
-            //         {
-            //             renderer.RenderCube(new(i, j, k), tex);
-            //         }
-            //     }
-            // }
-            //
-            // for (int i = 0; i < 16; i++)
-            // {
-            //     for (int j = 16; j < 18; j++)
-            //     {
-            //         for (int k = 0; k < 16; k++)
-            //         {
-            //             renderer.RenderCube(new (i, j, k), tex2);
-            //         }
-            //     }
-            // }
+
             renderer.RenderChunk(testChunk);
+
             renderer.EndScene();
         }
 

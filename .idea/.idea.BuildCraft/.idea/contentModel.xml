@@ -13,6 +13,10 @@
       <e p="BuildCraft" t="IncludeRecursive">
         <e p="Assets" t="Include">
           <e p="Shaders" t="Include">
+            <e p="Chunk" t="Include">
+              <e p="Shader.frag" t="Include" />
+              <e p="Shader.vert" t="Include" />
+            </e>
             <e p="Test" t="Include">
               <e p="Shader.frag" t="Include" />
               <e p="Shader.vert" t="Include" />
@@ -54,7 +58,9 @@
         <e p="Game" t="Include">
           <e p="Main.cs" t="Include" />
           <e p="Renderer" t="Include">
+            <e p="ChunkRenderer.cs" t="Include" />
             <e p="CubeRenderer.cs" t="Include" />
+            <e p="NonFunctionalChunkRenderer.cs" t="Include" />
           </e>
           <e p="Resource" t="Include">
             <e p="TextureManager.cs" t="Include" />

@@ -227,6 +227,12 @@ namespace BuildCraft.Base.GlWrappers
         {
             Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, 0);
         }
+        
+        public unsafe void SetData(void* data, size_t size)
+        {
+            Bind();
+            Gl.BufferSubData(BufferTargetARB.ElementArrayBuffer, (nint) 0, (nuint) size, data);
+        }
 
         private void ReleaseUnmanagedResources()
         {

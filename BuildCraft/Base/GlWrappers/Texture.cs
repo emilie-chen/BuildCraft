@@ -45,9 +45,9 @@ namespace BuildCraft.Base.GlWrappers
             Gl.GenerateMipmap(TextureTarget.Texture2D);
         }
 
-        public void Bind(int textureSlot = 0)
+        public void Bind(uint textureSlot = 0)
         {
-            Gl.ActiveTexture((TextureUnit) ((int) TextureUnit.Texture0 + textureSlot));
+            Gl.ActiveTexture((TextureUnit) ((uint) TextureUnit.Texture0 + textureSlot));
             Gl.BindTexture(TextureTarget.Texture2D, m_RendererID);
         }
 

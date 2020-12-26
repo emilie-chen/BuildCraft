@@ -92,7 +92,7 @@ namespace BuildCraft.Base.GlWrappers
             else
             {
                 location = Gl.GetUniformLocation(m_RendererID, name);
-                Debug.Assert(location != -1, "Uniform not found");
+                Debug.Assert(location != -1, $"Uniform {name} not found");
                 m_UniformLocationCache[name] = location;
             }
             Gl.UniformMatrix4(location, 1, false, (float*) &matrix);
